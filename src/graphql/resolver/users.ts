@@ -8,7 +8,7 @@ import {
 } from '../schema/userArgs'
 import { authChecker, MyContext } from '../../config/auth'
 import { UserInputError } from 'apollo-server-core'
-import event from '../../events'
+// import event from '../../events'
 import { config } from '../../config/envConfig'
 import { sendEmail } from 'src/helpers/sendMail'
 
