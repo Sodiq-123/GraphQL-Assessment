@@ -8,9 +8,8 @@ import {
 } from '../schema/userArgs'
 import { authChecker, MyContext } from '../../config/auth'
 import { UserInputError } from 'apollo-server-core'
-// import event from '../../events'
+import event from '../../events'
 import { config } from '../../config/envConfig'
-import { sendEmail } from '../../helpers/sendMail'
 
 @Resolver()
 export class UserResolver {
@@ -31,7 +30,11 @@ export class UserResolver {
       verified: VerificationStatus.pending,
     })
     const token = await newUser.generateToken()
-    await sendEmail(newUser.email, `Hi ${newUser.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`, 'Verify your email')
+    await event.emit('send:email', {
+      to: newUser.email,
+      body: `Hi ${newUser.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`,
+      subject: 'Verify your email'
+    })
 
     return {
       success: true,
@@ -80,7 +83,11 @@ export class UserResolver {
       }
     }
     const token = await user.generateToken()
-    await sendEmail(user.email,`Hi ${user.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`, 'Verify your email')
+    await event.emit('send:email', {
+      to: user.email,
+      body: `Hi ${user.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`,
+      subject: 'Verify your email'
+    })
     return {
       success: true,
       message: 'Verification email resent successfully'
