@@ -9,8 +9,6 @@ const schema = Joi.object()
     DB_URL: Joi.string().required(),
     SECRET_KEY: Joi.string().required(),
     JWT_SECRET: Joi.string().required(),
-    EMAIL: Joi.string().required().email(),
-    EMAIL_PASSWORD: Joi.string().required(),
     APP_URL: Joi.string().required(),
     MAILGUN_API_KEY: Joi.string().required(),
     MAILGUN_SUBDOMAIN: Joi.string().required(),
