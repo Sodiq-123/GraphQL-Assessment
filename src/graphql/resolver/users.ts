@@ -31,7 +31,7 @@ export class UserResolver {
       verified: VerificationStatus.pending,
     })
     const token = await newUser.generateToken()
-    await sendEmail(newUser.email,`Hi ${newUser.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`, 'Verify your email')
+    await sendEmail(newUser.email, `Hi ${newUser.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`, 'Verify your email')
 
     return {
       success: true,
