@@ -32,7 +32,7 @@ export class UserResolver {
     const token = await newUser.generateToken()
     await event.emit('send:email', {
       to: newUser.email,
-      body: `Hi ${newUser.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`,
+      body: `Hi ${newUser.name} \nPlease click the following link to verify your account: \n${config.APP_URL}verify?token=${token} \nThanks,\nTeam Fidia`,
       subject: 'Verify your email'
     })
 
@@ -85,7 +85,7 @@ export class UserResolver {
     const token = await user.generateToken()
     await event.emit('send:email', {
       to: user.email,
-      body: `Hi ${user.name} \nPlease click the following link to verify your account: \n${config.APP_URL}/verify?token=${token} \nThanks,\nTeam Fidia`,
+      body: `Hi ${user.name} \nPlease click the following link to verify your account: \n${config.APP_URL}verify?token=${token} \nThanks,\nTeam Fidia`,
       subject: 'Verify your email'
     })
     return {
