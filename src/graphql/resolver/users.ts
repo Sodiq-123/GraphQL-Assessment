@@ -10,7 +10,7 @@ import { authChecker, MyContext } from '../../config/auth'
 import { UserInputError } from 'apollo-server-core'
 // import event from '../../events'
 import { config } from '../../config/envConfig'
-import { sendEmail } from 'src/helpers/sendMail'
+import { sendEmail } from '../../helpers/sendMail'
 
 @Resolver()
 export class UserResolver {
