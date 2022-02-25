@@ -6,7 +6,7 @@ import { IResponse, VerificationStatus } from '../schema/Response'
 import {
   createUserArgs,
 } from '../schema/userArgs'
-import { authChecker, MyContext } from '../../config/auth'
+import { authChecker, getRequestBody, MyContext } from '../../config/auth'
 import { UserInputError } from 'apollo-server-core'
 // import event from '../../events'
 import { config } from '../../config/envConfig'
@@ -15,6 +15,7 @@ import { sendEmail } from '../../helpers/sendMail'
 @Resolver()
 export class UserResolver {
   @Mutation(() => IResponse)
+  // @UseMiddleware(getRequestBody)
   async createUser(@Args() data: createUserArgs): Promise<IResponse> {
     const { name, email, password, phone_number, country } = data
     const user = await User.findOne({ email })
@@ -88,6 +89,7 @@ export class UserResolver {
   }
 
   @Mutation(() => IResponse)
+  // @UseMiddleware(getRequestBody)
   async login(@Arg('email') email: string, @Arg('password') password: string): Promise<IResponse> {
     const user = await User.findOne({ email })
     if (!user) {
@@ -100,7 +102,12 @@ export class UserResolver {
     }
 
     if (user.verified === VerificationStatus.pending) {
-      throw new ForbiddenError('Check your email to verify your account')
+      const token = await user.generateToken()
+      await sendEmail(user.email, `Hi ${user.name} \nPlease click the following link to verify your account: \n${config.APP_URL}verify?token=${token} \nThanks,\nTeam Fidia`, 'Verify your email')
+      return {
+        success: true,
+        message: 'User is not verified. Please check your email for verification link'
+      }
     }
     const token = await user.generateToken()
     return {
@@ -112,9 +119,9 @@ export class UserResolver {
 
 
   @Query(() => IResponse)
-  @UseMiddleware(authChecker)
+  // @UseMiddleware(authChecker)
   async getUsers(@Ctx() { payload }: MyContext): Promise<IResponse> {
-    const users = await User.find({ _id: { $ne: payload.user_id } })
+    const users = await User.find({})
     return {
       success: true,
       message: 'Users fetched successfully',

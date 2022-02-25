@@ -30,3 +30,13 @@ export const authChecker: MiddlewareFn<MyContext> = ({ context }, next) => {
 
   return next()
 }
+
+export const getRequestBody: MiddlewareFn<MyContext> = ({ context, args }, next) => {
+  const { req } = context
+  context.req = {
+    ...req,
+    body: req.body,
+  }
+  console.log(context.req.body)
+  return next()
+}
